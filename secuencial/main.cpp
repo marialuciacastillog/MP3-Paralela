@@ -8,6 +8,7 @@
 #include "Ecosystem.h"
 #include <iostream>
 #include <string>
+#include <chrono>
 
 using namespace std;
 
@@ -26,6 +27,9 @@ int main(int argc, char *argv[]) {
         cout << "generacion,conejos,zorros" << endl;
     }
 
+    // Empieza a medir el tiempo (solo la simulacion, no la lectura)
+    chrono::steady_clock::time_point start = chrono::steady_clock::now();
+
     for (int g = 0; g <= nGen; g++) {
         // Mostrar la generacion g antes de moverla
         if (mode == "all") {
@@ -42,9 +46,17 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    // Termina de medir el tiempo
+    chrono::steady_clock::time_point end = chrono::steady_clock::now();
+    double seconds = chrono::duration<double>(end - start).count();
+
     if (mode == "final") {
         eco.printFinal();
     }
+
+    // El tiempo va por cerr para que no se mezcle con la salida
+    // (asi el archivo de salida se puede seguir comparando con fc o diff)
+    cerr << fixed << "Tiempo: " << seconds << " segundos" << endl;
 
     return 0;
 }
